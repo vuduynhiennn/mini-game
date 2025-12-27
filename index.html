@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ECH Lucky Wheel - Vòng Quay May Mắn</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect"
+        href="https://fonts.googleapis.com">
+    <link rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -39,7 +45,7 @@
             background: white;
             padding: 10px 20px;
             border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
             display: inline-block;
             margin-bottom: 10px;
         }
@@ -53,7 +59,7 @@
             color: white;
             font-size: clamp(1.3rem, 4vw, 2rem);
             font-weight: 700;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
             margin-top: 8px;
             letter-spacing: 0.5px;
         }
@@ -88,8 +94,8 @@
             transform: translate(-50%, -50%);
             border-radius: 50%;
             box-shadow: 0 0 0 10px #fff,
-                        0 0 0 15px #F4C430,
-                        0 0 50px rgba(0,0,0,0.5);
+                0 0 0 15px #F4C430,
+                0 0 50px rgba(0, 0, 0, 0.5);
             transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1);
             max-width: 100%;
             max-height: 100%;
@@ -104,7 +110,7 @@
             height: clamp(60px, 10vw, 80px);
             background: linear-gradient(135deg, #F4C430, #FFA500);
             border-radius: 50%;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
             z-index: 10;
             display: flex;
             align-items: center;
@@ -126,7 +132,7 @@
             border-right: 25px solid transparent;
             border-top: 40px solid #FF4444;
             z-index: 5;
-            filter: drop-shadow(0 3px 10px rgba(0,0,0,0.4));
+            filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.4));
         }
 
         .pointer::after {
@@ -208,7 +214,7 @@
             background: white;
             padding: clamp(20px, 4vw, 30px) clamp(30px, 6vw, 50px);
             border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
             text-align: center;
             width: 100%;
             max-width: 500px;
@@ -225,7 +231,7 @@
         }
 
         .result-container:hover {
-            box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
         }
 
         .result-container h2 {
@@ -241,7 +247,7 @@
             font-size: clamp(2rem, 5vw, 3rem);
             font-weight: 800;
             margin: 20px 0;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
             letter-spacing: 0.5px;
             line-height: 1.2;
         }
@@ -275,6 +281,7 @@
                 opacity: 0;
                 transform: translateY(-50px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -286,6 +293,7 @@
                 opacity: 0;
                 transform: translateY(50px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -297,6 +305,7 @@
                 opacity: 0;
                 transform: translateX(50px);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(0);
@@ -304,9 +313,12 @@
         }
 
         @keyframes pulse {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: translate(-50%, -50%) scale(1);
             }
+
             50% {
                 transform: translate(-50%, -50%) scale(1.1);
             }
@@ -330,7 +342,7 @@
             background: rgba(255, 255, 255, 0.9);
             padding: 10px 20px;
             border-radius: 50px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
             font-weight: bold;
             color: #667eea;
         }
@@ -355,8 +367,8 @@
 
             #wheelCanvas {
                 box-shadow: 0 0 0 8px #fff,
-                            0 0 0 12px #F4C430,
-                            0 0 30px rgba(0,0,0,0.5);
+                    0 0 0 12px #F4C430,
+                    0 0 30px rgba(0, 0, 0, 0.5);
             }
 
             .pointer {
@@ -401,14 +413,14 @@
             border-radius: 50%;
             cursor: pointer;
             font-size: 24px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
             z-index: 1000;
         }
 
         .fullscreen-btn:hover {
             transform: scale(1.1);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
 
         ::-webkit-scrollbar {
@@ -430,12 +442,16 @@
         }
     </style>
 </head>
+
 <body>
-    <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶</button>
+    <button class="fullscreen-btn"
+        onclick="toggleFullscreen()">⛶</button>
 
     <div class="header">
         <div class="logo-container">
-            <img src="logo.png" alt="ECH Logo" class="logo">
+            <img src="logo.png"
+                alt="ECH Logo"
+                class="logo">
         </div>
         <h1>🎉 VÒNG QUAY MAY MẮN 🎉</h1>
     </div>
@@ -448,31 +464,46 @@
 
             <div class="wheel-container">
                 <div class="pointer"></div>
-                <canvas id="wheelCanvas" width="600" height="600"></canvas>
+                <canvas id="wheelCanvas"
+                    width="600"
+                    height="600"></canvas>
                 <div class="wheel-center">ECH</div>
             </div>
 
             <div class="controls">
-                <button class="spin-button" id="spinButton">Quay Ngay</button>
+                <button class="spin-button"
+                    id="spinButton">Quay Ngay</button>
                 <div class="button-group">
-                    <button class="secondary-button" onclick="resetWheel()">Làm mới</button>
-                    <button class="secondary-button" onclick="exportHistory()">Xuất kết quả</button>
+                    <button class="secondary-button"
+                        onclick="resetWheel()">Làm mới</button>
+                    <button class="secondary-button"
+                        onclick="exportHistory()">Xuất kết quả</button>
                 </div>
             </div>
 
-            <div class="result-container" id="resultContainer">
+            <div class="result-container"
+                id="resultContainer">
                 <h2>🎯 Đoán xem ai đây? 🎯</h2>
-                <div class="winner-name" id="winnerName"></div>
-                <div class="winner-info" id="winnerInfo"></div>
+                <div class="winner-name"
+                    id="winnerName"></div>
+                <div class="winner-info"
+                    id="winnerInfo"></div>
             </div>
         </div>
     </div>
 
     <!-- Hidden settings (always enabled) -->
-    <input type="checkbox" id="noRepeatMode" checked style="display: none;">
-    <input type="checkbox" id="soundToggle" checked style="display: none;">
+    <input type="checkbox"
+        id="noRepeatMode"
+        checked
+        style="display: none;">
+    <input type="checkbox"
+        id="soundToggle"
+        checked
+        style="display: none;">
 
-    <div class="particle-container" id="particleContainer"></div>
+    <div class="particle-container"
+        id="particleContainer"></div>
 
     <script>
         const allMembers = [
@@ -598,16 +629,22 @@
             }
 
             const spins = 5 + Math.random() * 5;
-            const randomIndex = Math.floor(Math.random() * members.length);
             const anglePerSegment = (2 * Math.PI) / members.length;
-            // Calculate target angle so pointer lands on middle of selected segment
-            // Pointer is at top, wheel rotates clockwise (negative direction makes it go right)
-            // To land on segment i, we need to rotate so that segment i is at top
-            const targetAngle = (2 * Math.PI * spins) - (randomIndex * anglePerSegment) - (anglePerSegment / 2);
+            const randomIndex = Math.floor(Math.random() * members.length);
+
+            // Target angle: rotate so that segment randomIndex is under pointer (at top)
+            // The pointer is at the TOP of the wheel
+            // Segments are drawn starting from -PI/2 (top) going clockwise
+            // To land on segment randomIndex, we need to rotate so its center aligns with top
+            const baseAngle = -(randomIndex + 0.5) * anglePerSegment;
+            const targetAngle = baseAngle + (2 * Math.PI * spins);
 
             const startRotation = currentRotation;
             const startTime = Date.now();
             const duration = 4000;
+
+            // Store the winner index to avoid recalculation errors
+            const winnerIndex = randomIndex;
 
             function animate() {
                 const now = Date.now();
@@ -623,16 +660,31 @@
                     isSpinning = false;
                     spinButton.disabled = false;
                     document.body.classList.remove('spinning');
-                    showWinner(randomIndex);
+
+                    // Use the predetermined winner index for 100% consistency
+                    showWinner(winnerIndex);
                     createConfetti();
 
                     if (document.getElementById('noRepeatMode').checked) {
-                        members.splice(randomIndex, 1);
+                        // Store current rotation before modifying members
+                        const savedRotation = currentRotation;
+
+                        members.splice(winnerIndex, 1);
                         remainingCount.textContent = members.length;
+
                         if (members.length === 0) {
                             spinButton.disabled = true;
                             spinButton.textContent = 'Đã hết người';
+                        } else {
+                            // Adjust rotation to maintain pointer position relative to new segments
+                            // Reset to a clean state to avoid flickering issues
+                            currentRotation = 0;
                         }
+
+                        // Redraw wheel after a short delay to prevent flicker
+                        requestAnimationFrame(() => {
+                            drawWheel();
+                        });
                     }
                 }
             }
@@ -844,4 +896,5 @@
         });
     </script>
 </body>
+
 </html>
