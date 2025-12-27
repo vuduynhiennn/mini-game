@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ECH Lucky Wheel - Vòng Quay May Mắn</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            animation: fadeInDown 1s ease;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .logo-container {
+            background: white;
+            padding: 15px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .logo {
+            max-width: min(300px, 80vw);
+            height: auto;
+        }
+
+        h1 {
+            color: white;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-top: 10px;
+        }
+
+        .main-container {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            max-width: 1400px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            animation: fadeInUp 1s ease;
+            flex: 1;
+            min-width: 300px;
+            max-width: 650px;
+        }
+
+        .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 350px;
+            animation: fadeInRight 1s ease;
+        }
+
+        .sidebar h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .settings {
+            margin-bottom: 20px;
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 26px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #F4C430;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        .history-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            background: #f8f9fa;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 10px;
+            border-left: 4px solid #F4C430;
+        }
+
+        .history-item strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .history-item small {
+            color: #666;
+        }
+
+        .wheel-container {
+            position: relative;
+            width: min(600px, 90vw);
+            height: min(600px, 90vw);
+        }
+
+        #wheelCanvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            box-shadow: 0 0 0 10px #fff,
+                        0 0 0 15px #F4C430,
+                        0 0 50px rgba(0,0,0,0.5);
+            transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1);
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .wheel-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: clamp(60px, 10vw, 80px);
+            height: clamp(60px, 10vw, 80px);
+            background: linear-gradient(135deg, #F4C430, #FFA500);
+            border-radius: 50%;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(18px, 3vw, 24px);
+            color: white;
+            font-weight: bold;
+            border: 5px solid white;
+        }
+
+        .pointer {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-top: 40px solid #FF4444;
+            z-index: 5;
+            filter: drop-shadow(0 3px 10px rgba(0,0,0,0.4));
+        }
+
+        .pointer::after {
+            content: '';
+            position: absolute;
+            top: -40px;
+            left: -25px;
+            width: 50px;
+            height: 15px;
+            background: #FF4444;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            width: 100%;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .spin-button {
+            background: linear-gradient(135deg, #F4C430, #FFA500);
+            color: white;
+            border: none;
+            padding: clamp(15px, 3vw, 20px) clamp(40px, 8vw, 60px);
+            font-size: clamp(18px, 3vw, 24px);
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(244, 196, 48, 0.4);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            touch-action: manipulation;
+        }
+
+        .spin-button:hover:not(:disabled) {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(244, 196, 48, 0.6);
+        }
+
+        .spin-button:active:not(:disabled) {
+            transform: translateY(-2px);
+        }
+
+        .spin-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .secondary-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            touch-action: manipulation;
+        }
+
+        .secondary-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .result-container {
+            background: white;
+            padding: clamp(20px, 4vw, 30px) clamp(30px, 6vw, 50px);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s ease;
+        }
+
+        .result-container.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .result-container h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+        }
+
+        .winner-name {
+            color: #F4C430;
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            font-weight: bold;
+            margin: 15px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .winner-info {
+            color: #666;
+            font-size: clamp(14px, 2.5vw, 18px);
+            line-height: 1.6;
+            margin-top: 10px;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #f0f;
+            position: absolute;
+            animation: confetti-fall 3s linear;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+        }
+
+        .spinning .wheel-center {
+            animation: pulse 0.5s infinite;
+        }
+
+        .particle-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .remaining-count {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 50px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+            }
+
+            .header {
+                margin-bottom: 15px;
+            }
+
+            .logo-container {
+                padding: 10px 20px;
+            }
+
+            .main-container {
+                gap: 15px;
+            }
+
+            .sidebar {
+                max-width: 100%;
+                order: 2;
+            }
+
+            .game-container {
+                order: 1;
+            }
+
+            .wheel-container {
+                width: min(400px, 95vw);
+                height: min(400px, 95vw);
+            }
+
+            #wheelCanvas {
+                box-shadow: 0 0 0 8px #fff,
+                            0 0 0 12px #F4C430,
+                            0 0 30px rgba(0,0,0,0.5);
+            }
+
+            .pointer {
+                top: -20px;
+                border-left: 20px solid transparent;
+                border-right: 20px solid transparent;
+                border-top: 30px solid #FF4444;
+            }
+
+            .pointer::after {
+                top: -30px;
+                left: -20px;
+                width: 40px;
+                height: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .wheel-container {
+                width: min(320px, 95vw);
+                height: min(320px, 95vw);
+            }
+
+            .button-group {
+                width: 100%;
+            }
+
+            .secondary-button {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+
+        .fullscreen-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .fullscreen-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #F4C430;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FFA500;
+        }
+    </style>
+</head>
+<body>
+    <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶</button>
+
+    <div class="header">
+        <div class="logo-container">
+            <img src="logo.png" alt="ECH Logo" class="logo">
+        </div>
+        <h1>🎉 VÒNG QUAY MAY MẮN 🎉</h1>
+    </div>
+
+    <div class="main-container">
+        <div class="game-container">
+            <div class="remaining-count">
+                Còn lại: <span id="remainingCount">23</span> người
+            </div>
+
+            <div class="wheel-container">
+                <div class="pointer"></div>
+                <canvas id="wheelCanvas" width="600" height="600"></canvas>
+                <div class="wheel-center">ECH</div>
+            </div>
+
+            <div class="controls">
+                <button class="spin-button" id="spinButton">Quay Ngay</button>
+                <div class="button-group">
+                    <button class="secondary-button" onclick="resetWheel()">Làm mới</button>
+                    <button class="secondary-button" onclick="exportHistory()">Xuất kết quả</button>
+                </div>
+            </div>
+
+            <div class="result-container" id="resultContainer">
+                <h2>🎊 Chúc Mừng 🎊</h2>
+                <div class="winner-name" id="winnerName"></div>
+                <div class="winner-info" id="winnerInfo"></div>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <h2>⚙️ Cài đặt</h2>
+            <div class="settings">
+                <div class="setting-item">
+                    <span>Không lặp lại</span>
+                    <label class="switch">
+                        <input type="checkbox" id="noRepeatMode" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <span>Âm thanh</span>
+                    <label class="switch">
+                        <input type="checkbox" id="soundToggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <h2>📜 Lịch sử</h2>
+            <div class="history-list" id="historyList">
+                <p style="text-align: center; color: #999; padding: 20px;">Chưa có kết quả</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="particle-container" id="particleContainer"></div>
+
+    <script>
+        const allMembers = [
+            { name: "Văn Hồng Nhung", class: "K34TM1", description: "Nói nhiều khi thân thiết, nói ít khi lạ", fact: "ngựa💅🏻" },
+            { name: "Nguyễn Thị Hồng Ngọc", class: "K32TMDT1", description: "Mình là nữ, nói khá nhiều, mọi người biết đến mình ở nhiều phương tiện", fact: "Mình cũng hướng nội nhưng mà theo mùa" },
+            { name: "Nguyễn Thu Thảo", class: "K32TMĐT2", description: "Hướng ngoại part time, hay hỗ trợ design hoặc hậu cần", fact: "" },
+            { name: "Trần Phương Linh", class: "K33TM1", description: "Người tưởng hướng nội mà hướng loạn, thích đi chơi mà mắc bệnh lười", fact: "" },
+            { name: "Trương Hà Trang", class: "K33TM1", description: "Người hiền nhất câu lạc bộ", fact: "Hạt nhài" },
+            { name: "Lê Quỳnh Mai", class: "K34KT3", description: "dễ thương-nonchalant😎 in one person", fact: "em thích tiramisu và ghét bông lan trứng muối" },
+            { name: "Nguyễn Thành Nam", class: "K34TM1", description: "Cao gần 1m8, thích đọc sách và chơi thể thao", fact: "Sợ ma nhưng thích coi phim ma" },
+            { name: "Nguyễn Quỳnh Anh", class: "K34TM2", description: "thích design nhưng không có kĩ năng thì phải làm sao ạ", fact: "em thích ăn bimbim chấm tương ớt đã trộn cùng muối hảo hảo" },
+            { name: "Nguyễn Phương Hoa", class: "K32TM1", description: "Đã ít nói còn nói nhiều", fact: "Đi siêu thị mỗi ngày (khảo sát thị trường)" },
+            { name: "Trần Thu Giang", class: "K34TM2", description: "Một cá thể đam mê ăn uống, sợ những con số nhưng lại cực kỳ hứng thú với những trò đùa vô tri", fact: "Sưu tầm sổ viết tay vì thấy bìa đẹp dù không viết gì cả" },
+            { name: "Mai Hà Vy", class: "K34-TM2", description: "Em thấp bé, nhỏ nhắn, xinh xắn, dễ thương. Em rất thích được trò chuyện và kết nối với mọi người", fact: "em thích ngủ 🥹" },
+            { name: "Đỗ Thị Đinh Hương", class: "K34TM2", description: "Chắc là e nhạt", fact: "" },
+            { name: "Đỗ Thùy Dung", class: "K32TM2", description: "Tôi là người hướng nội partime, tên tôi dịch từ tiếng anh sang tiếng việt có nghĩa là một loại phân bón", fact: "" },
+            { name: "Nguyễn Thị Hải Anh", class: "K34TM1", description: "học ngu mà gu học bá", fact: "" },
+            { name: "Lăng Thị Mai Hoa", class: "K34TM2", description: "Hơi trầm...", fact: "ngủ cả ngày=)))" },
+            { name: "Trương Trà My", class: "K34TM2", description: "Em là một người khá hoạt ngôn, thích cười và cũng thích xem mọi người cười", fact: "Anti loài hành 🧅" },
+            { name: "Nguyễn Thị Khánh Huyền", class: "K34QT4", description: "Học ngành khác với clb. Má hồng", fact: "" },
+            { name: "Ngô MThi", class: "K31TMĐT2", description: "Hê lô mọi người, mình cao 5m1, tính cách vui vẻ, hòa đồng nhưng bị ít nói", fact: "Sở thích: Đam mê tự cắt tóc xong tự hối hận😀" },
+            { name: "Lê Thị Hằng", class: "K32Tm2", description: "Có vẻ khó gần nhưng rất open, cởi mở", fact: "Sở thích kì lạ: thỉnh thoảng lẩm bẩm nói chuyện 1 mình😃" },
+            { name: "Nguyễn Phương Thảo", class: "K34TM2", description: "Thường xuất hiện trong các hoạt động chung, thích hỗ trợ mọi người", fact: "" },
+            { name: "Thanh Quyến nè", class: "K32TM1", description: "Là người hay dí dl lúc nửa đêmm", fact: "Mê uống cà phê nhưng nghèo nghèo nên kh hay uống" },
+            { name: "Vũ Duy Nhiên", class: "K31QT1", description: "Ok", fact: "Hay đổi tên zalo" },
+            { name: "Bùi Thị Hồng Nhung", class: "K31TM1", description: "Cao 5m1, cute hột me, nhiệt huyết và luôn cố gắng hoàn thành mọi thứ 1 cách tốt nhất", fact: "Có quá nhiều fact để fun" }
+        ];
+
+        let members = [...allMembers];
+        let history = [];
+
+        const canvas = document.getElementById('wheelCanvas');
+        const ctx = canvas.getContext('2d');
+        const spinButton = document.getElementById('spinButton');
+        const resultContainer = document.getElementById('resultContainer');
+        const winnerName = document.getElementById('winnerName');
+        const winnerInfo = document.getElementById('winnerInfo');
+        const historyList = document.getElementById('historyList');
+        const remainingCount = document.getElementById('remainingCount');
+
+        const colors = [
+            '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8',
+            '#F7DC6F', '#BB8FCE', '#85C1E2', '#F8B739', '#52B788',
+            '#FF8FAB', '#84DCC6', '#FFC09F', '#AEC6CF', '#FFB7B2',
+            '#95E1D3', '#F38181', '#AA96DA', '#FCBAD3', '#A8D8EA',
+            '#FFD97D', '#60D394', '#EE8A82'
+        ];
+
+        let currentRotation = 0;
+        let isSpinning = false;
+        let currentWinner = null;
+        let revealState = 0; // 0: description, 1: fact, 2: name
+
+        function updateCanvas() {
+            const size = Math.min(600, window.innerWidth * 0.9, window.innerHeight * 0.9);
+            canvas.width = size;
+            canvas.height = size;
+        }
+
+        function drawWheel() {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = canvas.width / 2 - 10;
+            const anglePerSegment = (2 * Math.PI) / members.length;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+            ctx.translate(centerX, centerY);
+            ctx.rotate(currentRotation);
+
+            for (let i = 0; i < members.length; i++) {
+                const startAngle = i * anglePerSegment;
+                const endAngle = startAngle + anglePerSegment;
+
+                ctx.beginPath();
+                ctx.arc(0, 0, radius, startAngle, endAngle);
+                ctx.lineTo(0, 0);
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.fill();
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+
+                ctx.save();
+                ctx.rotate(startAngle + anglePerSegment / 2);
+                ctx.textAlign = 'center';
+                ctx.fillStyle = '#fff';
+                ctx.font = `bold ${Math.max(10, canvas.width / 45)}px Arial`;
+                ctx.shadowColor = 'rgba(0,0,0,0.5)';
+                ctx.shadowBlur = 3;
+
+                const name = members[i].name;
+                const words = name.split(' ');
+                const textRadius = radius * 0.65;
+
+                if (words.length > 2) {
+                    ctx.fillText(words.slice(0, -1).join(' '), textRadius, -5);
+                    ctx.fillText(words[words.length - 1], textRadius, 10);
+                } else {
+                    ctx.fillText(name, textRadius, 0);
+                }
+
+                ctx.restore();
+            }
+
+            ctx.restore();
+        }
+
+        function spin() {
+            if (isSpinning || members.length === 0) return;
+
+            isSpinning = true;
+            spinButton.disabled = true;
+            resultContainer.classList.remove('show');
+            document.body.classList.add('spinning');
+
+            if (document.getElementById('soundToggle').checked) {
+                playSpinSound();
+            }
+
+            const spins = 5 + Math.random() * 5;
+            const randomIndex = Math.floor(Math.random() * members.length);
+            const targetAngle = (2 * Math.PI * spins) + (randomIndex * (2 * Math.PI / members.length));
+
+            const startRotation = currentRotation;
+            const startTime = Date.now();
+            const duration = 4000;
+
+            function animate() {
+                const now = Date.now();
+                const progress = Math.min((now - startTime) / duration, 1);
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+
+                currentRotation = startRotation + targetAngle * easeOut;
+                drawWheel();
+
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    isSpinning = false;
+                    spinButton.disabled = false;
+                    document.body.classList.remove('spinning');
+                    showWinner(randomIndex);
+                    createConfetti();
+
+                    if (document.getElementById('noRepeatMode').checked) {
+                        members.splice(randomIndex, 1);
+                        remainingCount.textContent = members.length;
+                        if (members.length === 0) {
+                            spinButton.disabled = true;
+                            spinButton.textContent = 'Đã hết người';
+                        }
+                    }
+                }
+            }
+
+            animate();
+        }
+
+        function showWinner(index) {
+            const winner = members[index];
+            currentWinner = winner;
+            revealState = 0;
+
+            // Initially show description
+            winnerName.textContent = '???';
+
+            let infoHTML = `<strong>Lớp:</strong> ${winner.class}<br>`;
+            if (winner.description) {
+                infoHTML += `<strong>Mô tả:</strong> ${winner.description}<br>`;
+            }
+            infoHTML += `<p style="margin-top: 15px; color: #999; font-style: italic;">Click để xem thêm...</p>`;
+
+            winnerInfo.innerHTML = infoHTML;
+
+            const historyItem = {
+                name: winner.name,
+                class: winner.class,
+                time: new Date().toLocaleString('vi-VN')
+            };
+            history.push(historyItem);
+            updateHistory();
+
+            setTimeout(() => {
+                resultContainer.classList.add('show');
+            }, 500);
+        }
+
+        function cycleWinnerInfo() {
+            if (!currentWinner) return;
+
+            revealState = (revealState + 1) % 3;
+
+            let infoHTML = `<strong>Lớp:</strong> ${currentWinner.class}<br>`;
+
+            if (revealState === 0) {
+                // Show description
+                winnerName.textContent = '???';
+                if (currentWinner.description) {
+                    infoHTML += `<strong>Mô tả:</strong> ${currentWinner.description}<br>`;
+                }
+                infoHTML += `<p style="margin-top: 15px; color: #999; font-style: italic;">Click để xem điều thú vị...</p>`;
+            } else if (revealState === 1) {
+                // Show fact
+                winnerName.textContent = '???';
+                if (currentWinner.fact) {
+                    infoHTML += `<strong>Điều thú vị:</strong> ${currentWinner.fact}<br>`;
+                } else {
+                    infoHTML += `<p style="color: #999;">Không có điều thú vị nào được chia sẻ.</p>`;
+                }
+                infoHTML += `<p style="margin-top: 15px; color: #999; font-style: italic;">Click để xem tên...</p>`;
+            } else {
+                // Show name
+                winnerName.textContent = currentWinner.name;
+                if (currentWinner.description) {
+                    infoHTML += `<strong>Mô tả:</strong> ${currentWinner.description}<br>`;
+                }
+                if (currentWinner.fact) {
+                    infoHTML += `<strong>Điều thú vị:</strong> ${currentWinner.fact}<br>`;
+                }
+                infoHTML += `<p style="margin-top: 15px; color: #999; font-style: italic;">Click để xem lại từ đầu...</p>`;
+            }
+
+            winnerInfo.innerHTML = infoHTML;
+
+            // Add a small animation
+            resultContainer.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                resultContainer.style.transform = 'scale(1)';
+            }, 100);
+        }
+
+        function updateHistory() {
+            if (history.length === 0) {
+                historyList.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">Chưa có kết quả</p>';
+                return;
+            }
+
+            historyList.innerHTML = history.map((item, index) => `
+                <div class="history-item">
+                    <strong>#${history.length - index}. ${item.name}</strong>
+                    <small>${item.class} - ${item.time}</small>
+                </div>
+            `).reverse().join('');
+        }
+
+        function createConfetti() {
+            const container = document.getElementById('particleContainer');
+            const colors = ['#F4C430', '#FFA500', '#FF6B6B', '#4ECDC4', '#45B7D1', '#F7DC6F'];
+
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.style.position = 'fixed';
+                    confetti.style.left = Math.random() * window.innerWidth + 'px';
+                    confetti.style.top = '-10px';
+                    confetti.style.width = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.height = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                    confetti.style.animation = `confetti-fall ${Math.random() * 2 + 2}s linear`;
+                    confetti.style.zIndex = '9999';
+
+                    container.appendChild(confetti);
+
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 4000);
+                }, i * 30);
+            }
+        }
+
+        function playSpinSound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.frequency.value = 200;
+            oscillator.type = 'sine';
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+
+        function resetWheel() {
+            if (confirm('Bạn có chắc muốn làm mới vòng quay? Lịch sử sẽ được giữ lại.')) {
+                members = [...allMembers];
+                remainingCount.textContent = members.length;
+                spinButton.disabled = false;
+                spinButton.textContent = 'Quay Ngay';
+                currentRotation = 0;
+                resultContainer.classList.remove('show');
+                drawWheel();
+            }
+        }
+
+        function exportHistory() {
+            if (history.length === 0) {
+                alert('Chưa có kết quả để xuất!');
+                return;
+            }
+
+            const csvContent = "data:text/csv;charset=utf-8,"
+                + "STT,Họ và tên,Lớp,Thời gian\n"
+                + history.map((item, index) =>
+                    `${index + 1},"${item.name}","${item.class}","${item.time}"`
+                ).join("\n");
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `ket-qua-quay-so-${new Date().getTime()}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        spinButton.addEventListener('click', spin);
+
+        updateCanvas();
+        drawWheel();
+
+        window.addEventListener('resize', () => {
+            updateCanvas();
+            drawWheel();
+        });
+
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                updateCanvas();
+                drawWheel();
+            }, 100);
+        });
+    </script>
+</body>
+</html>
