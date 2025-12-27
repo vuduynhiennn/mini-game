@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ECH Lucky Wheel - Vòng Quay May Mắn</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,7 +16,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
@@ -34,144 +37,42 @@
 
         .logo-container {
             background: white;
-            padding: 15px 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            padding: 10px 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
             display: inline-block;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .logo {
-            max-width: min(300px, 80vw);
+            max-width: min(180px, 60vw);
             height: auto;
         }
 
         h1 {
             color: white;
-            font-size: clamp(1.5rem, 5vw, 2.5rem);
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            margin-top: 10px;
+            font-size: clamp(1.3rem, 4vw, 2rem);
+            font-weight: 700;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            margin-top: 8px;
+            letter-spacing: 0.5px;
         }
 
         .main-container {
             display: flex;
-            gap: 20px;
+            flex-direction: column;
+            align-items: center;
             width: 100%;
-            max-width: 1400px;
-            flex-wrap: wrap;
-            justify-content: center;
+            max-width: 900px;
         }
 
         .game-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: 25px;
             animation: fadeInUp 1s ease;
-            flex: 1;
-            min-width: 300px;
-            max-width: 650px;
-        }
-
-        .sidebar {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
             width: 100%;
-            max-width: 350px;
-            animation: fadeInRight 1s ease;
-        }
-
-        .sidebar h2 {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .settings {
-            margin-bottom: 20px;
-        }
-
-        .setting-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px;
-            margin: 10px 0;
-            background: #f8f9fa;
-            border-radius: 10px;
-        }
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 26px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 26px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: #F4C430;
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(24px);
-        }
-
-        .history-list {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .history-item {
-            background: #f8f9fa;
-            padding: 10px;
-            margin: 8px 0;
-            border-radius: 10px;
-            border-left: 4px solid #F4C430;
-        }
-
-        .history-item strong {
-            color: #667eea;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .history-item small {
-            color: #666;
         }
 
         .wheel-container {
@@ -314,6 +215,8 @@
             opacity: 0;
             transform: scale(0.8);
             transition: all 0.5s ease;
+            cursor: pointer;
+            user-select: none;
         }
 
         .result-container.show {
@@ -321,25 +224,34 @@
             transform: scale(1);
         }
 
+        .result-container:hover {
+            box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+        }
+
         .result-container h2 {
             color: #667eea;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 700;
+            letter-spacing: 0.3px;
         }
 
         .winner-name {
             color: #F4C430;
-            font-size: clamp(1.8rem, 5vw, 2.5rem);
-            font-weight: bold;
-            margin: 15px 0;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            margin: 20px 0;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+            letter-spacing: 0.5px;
+            line-height: 1.2;
         }
 
         .winner-info {
-            color: #666;
-            font-size: clamp(14px, 2.5vw, 18px);
-            line-height: 1.6;
+            color: #444;
+            font-size: clamp(15px, 2.5vw, 18px);
+            line-height: 1.8;
             margin-top: 10px;
+            font-weight: 500;
         }
 
         .confetti {
@@ -429,29 +341,16 @@
             }
 
             .header {
-                margin-bottom: 15px;
+                margin-bottom: 12px;
             }
 
             .logo-container {
-                padding: 10px 20px;
-            }
-
-            .main-container {
-                gap: 15px;
-            }
-
-            .sidebar {
-                max-width: 100%;
-                order: 2;
-            }
-
-            .game-container {
-                order: 1;
+                padding: 8px 16px;
             }
 
             .wheel-container {
-                width: min(400px, 95vw);
-                height: min(400px, 95vw);
+                width: min(450px, 95vw);
+                height: min(450px, 95vw);
             }
 
             #wheelCanvas {
@@ -477,8 +376,8 @@
 
         @media (max-width: 480px) {
             .wheel-container {
-                width: min(320px, 95vw);
-                height: min(320px, 95vw);
+                width: min(350px, 95vw);
+                height: min(350px, 95vw);
             }
 
             .button-group {
@@ -562,65 +461,44 @@
             </div>
 
             <div class="result-container" id="resultContainer">
-                <h2>🎊 Chúc Mừng 🎊</h2>
+                <h2>🎯 Đoán xem ai đây? 🎯</h2>
                 <div class="winner-name" id="winnerName"></div>
                 <div class="winner-info" id="winnerInfo"></div>
             </div>
         </div>
-
-        <div class="sidebar">
-            <h2>⚙️ Cài đặt</h2>
-            <div class="settings">
-                <div class="setting-item">
-                    <span>Không lặp lại</span>
-                    <label class="switch">
-                        <input type="checkbox" id="noRepeatMode" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div class="setting-item">
-                    <span>Âm thanh</span>
-                    <label class="switch">
-                        <input type="checkbox" id="soundToggle" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-            </div>
-
-            <h2>📜 Lịch sử</h2>
-            <div class="history-list" id="historyList">
-                <p style="text-align: center; color: #999; padding: 20px;">Chưa có kết quả</p>
-            </div>
-        </div>
     </div>
+
+    <!-- Hidden settings (always enabled) -->
+    <input type="checkbox" id="noRepeatMode" checked style="display: none;">
+    <input type="checkbox" id="soundToggle" checked style="display: none;">
 
     <div class="particle-container" id="particleContainer"></div>
 
     <script>
         const allMembers = [
             { name: "Văn Hồng Nhung", class: "K34TM1", description: "Nói nhiều khi thân thiết, nói ít khi lạ", fact: "ngựa💅🏻" },
-            { name: "Nguyễn Thị Hồng Ngọc", class: "K32TMDT1", description: "Mình là nữ, nói khá nhiều, mọi người biết đến mình ở nhiều phương tiện", fact: "Mình cũng hướng nội nhưng mà theo mùa" },
-            { name: "Nguyễn Thu Thảo", class: "K32TMĐT2", description: "Hướng ngoại part time, hay hỗ trợ design hoặc hậu cần", fact: "" },
-            { name: "Trần Phương Linh", class: "K33TM1", description: "Người tưởng hướng nội mà hướng loạn, thích đi chơi mà mắc bệnh lười", fact: "" },
-            { name: "Trương Hà Trang", class: "K33TM1", description: "Người hiền nhất câu lạc bộ", fact: "Hạt nhài" },
+            { name: "Nguyễn Thị Hồng Ngọc", class: "K32TMDT1", description: "Mình là nữ, nói khá nhiều, mọi người biết đến mình ở nhiều phương tiện, nhiều kênh. Mình vào ECH được 2 năm và tham gia khá nhiều chương trình. Mình đã từng tham gia 2 mùa Unitour. Hiện tại mình vừa có vị trí mới và dealine dí mình như bác chủ nhiệm dí =)))", fact: "Mình cũng hướng nội nhưng mà theo mùa" },
+            { name: "Nguyễn Thu Thảo", class: "K32TMĐT2", description: "Hướng ngoại part time, hay hỗ trợ design hoặc hậu cần, quan sát đời qua 4 con mắt.", fact: "" },
+            { name: "Trần Phương Linh", class: "K33TM1", description: "Người tưởng hướng nội mà hướng loạn, thích đi chơi mà mắc bệnh lười, mê ngủ nhưng không đi ngủ đúng giờ.", fact: "" },
+            { name: "Trương Hà Trang", class: "K33TM1", description: "Người hiền nhất câu lạc bộ =)))", fact: "Hạt nhài" },
             { name: "Lê Quỳnh Mai", class: "K34KT3", description: "dễ thương-nonchalant😎 in one person", fact: "em thích tiramisu và ghét bông lan trứng muối" },
-            { name: "Nguyễn Thành Nam", class: "K34TM1", description: "Cao gần 1m8, thích đọc sách và chơi thể thao", fact: "Sợ ma nhưng thích coi phim ma" },
-            { name: "Nguyễn Quỳnh Anh", class: "K34TM2", description: "thích design nhưng không có kĩ năng thì phải làm sao ạ", fact: "em thích ăn bimbim chấm tương ớt đã trộn cùng muối hảo hảo" },
-            { name: "Nguyễn Phương Hoa", class: "K32TM1", description: "Đã ít nói còn nói nhiều", fact: "Đi siêu thị mỗi ngày (khảo sát thị trường)" },
-            { name: "Trần Thu Giang", class: "K34TM2", description: "Một cá thể đam mê ăn uống, sợ những con số nhưng lại cực kỳ hứng thú với những trò đùa vô tri", fact: "Sưu tầm sổ viết tay vì thấy bìa đẹp dù không viết gì cả" },
-            { name: "Mai Hà Vy", class: "K34-TM2", description: "Em thấp bé, nhỏ nhắn, xinh xắn, dễ thương. Em rất thích được trò chuyện và kết nối với mọi người", fact: "em thích ngủ 🥹" },
+            { name: "Nguyễn Thành Nam", class: "K34TM1", description: "Cao gần 1m8 , thích đọc sách và chơi thể thao", fact: "Sợ ma nhưng thích coi phim ma" },
+            { name: "Nguyễn Quỳnh Anh", class: "k34tm2", description: "thích design nhưng không có kĩ năng thì phải làm sao ạ", fact: "em thích ăn bimbim chấm tương ớt đã trộn cùng muối hảo hảo" },
+            { name: "Nguyễn Phương Hoa", class: "K32TM1", description: "Đã ít nói còn nói nhiều", fact: "Đi siêu thị mỗi ngày (khảo sát thị trường) 🫰🏻" },
+            { name: "Trần Thu Giang", class: "K34TM2", description: "Một cá thể đam mê ăn uống, sợ những con số nhưng lại cực kỳ hứng thú với những trò đùa vô tri, thích hát mà không hát hay..", fact: "Sưu tầm sổ viết tay vì thấy bìa đẹp dù không viết gì cả" },
+            { name: "Mai Hà Vy", class: "K34-TM2", description: "Em thấp bé, nhỏ nhắn, xinh xắn, dễ thương. Em rất thích được trò chuyện là kết nối với mọi người ạ", fact: "em thích ngủ 🥹" },
             { name: "Đỗ Thị Đinh Hương", class: "K34TM2", description: "Chắc là e nhạt", fact: "" },
-            { name: "Đỗ Thùy Dung", class: "K32TM2", description: "Tôi là người hướng nội partime, tên tôi dịch từ tiếng anh sang tiếng việt có nghĩa là một loại phân bón", fact: "" },
-            { name: "Nguyễn Thị Hải Anh", class: "K34TM1", description: "học ngu mà gu học bá", fact: "" },
-            { name: "Lăng Thị Mai Hoa", class: "K34TM2", description: "Hơi trầm...", fact: "ngủ cả ngày=)))" },
-            { name: "Trương Trà My", class: "K34TM2", description: "Em là một người khá hoạt ngôn, thích cười và cũng thích xem mọi người cười", fact: "Anti loài hành 🧅" },
-            { name: "Nguyễn Thị Khánh Huyền", class: "K34QT4", description: "Học ngành khác với clb. Má hồng", fact: "" },
-            { name: "Ngô MThi", class: "K31TMĐT2", description: "Hê lô mọi người, mình cao 5m1, tính cách vui vẻ, hòa đồng nhưng bị ít nói", fact: "Sở thích: Đam mê tự cắt tóc xong tự hối hận😀" },
-            { name: "Lê Thị Hằng", class: "K32Tm2", description: "Có vẻ khó gần nhưng rất open, cởi mở", fact: "Sở thích kì lạ: thỉnh thoảng lẩm bẩm nói chuyện 1 mình😃" },
-            { name: "Nguyễn Phương Thảo", class: "K34TM2", description: "Thường xuất hiện trong các hoạt động chung, thích hỗ trợ mọi người", fact: "" },
+            { name: "Đỗ Thùy Dung", class: "K32TM2", description: "Tôi là người hướng nội partime , tên tôi dịch từ tiếng anh sang tiếng việt có nghĩa là một loại phân bón .", fact: "" },
+            { name: "NGUYỄN THỊ HẢI ANH", class: "K34TM1", description: "học ngu mà gu học bá", fact: "" },
+            { name: "Lăng Thị Mai Hoa", class: "k34TM2", description: "Hơi trầm...", fact: "ngủ cả ngày=)))" },
+            { name: "Trương Trà My", class: "K34TM2", description: "Em là một người khá hoạt ngôn, thích cười và cũng thích xem mọi người cười (ý là lan toả năng lượng tích cực ấy ạ). Luôn tò mò với mọi điều mới và khi quen thì sẽ nói rất nhiềuuuu", fact: "Anti loài hành 🧅" },
+            { name: "Nguyễn Thị Khánh Huyền", class: "K34QT4", description: "Học ngành khác với clb\nMá hồng", fact: "" },
+            { name: "Ngô MThi", class: "K31TMĐT2", description: "Hê lô mọi người, mình cao 5m1, tính cách vui vẻ, hòa đồng nhưng bị ít nói. Mk thích nghe nhạc, vẽ tranh, coi alime... Chúc mọi người có một buổi tối vui vẻ😊", fact: "Sở thích: Đam mê tự cắt tóc xong tự hối hận😀" },
+            { name: "Lê Thị Hằng", class: "K32Tm2", description: "Có vẻ khó gần nhưng rất open, cởi mở.", fact: "Sở thích kì lạ: thỉnh thoảng lẩm bẩm nói chuyện 1 mình😃" },
+            { name: "Nguyễn Phương Thảo", class: "K34TM2", description: "Thường xuất hiện trong các hoạt động chung, thích hỗ trợ mọi người và luôn sẵn sàng nhận việc dù lớn hay nhỏ.", fact: "" },
             { name: "Thanh Quyến nè", class: "K32TM1", description: "Là người hay dí dl lúc nửa đêmm", fact: "Mê uống cà phê nhưng nghèo nghèo nên kh hay uống" },
             { name: "Vũ Duy Nhiên", class: "K31QT1", description: "Ok", fact: "Hay đổi tên zalo" },
-            { name: "Bùi Thị Hồng Nhung", class: "K31TM1", description: "Cao 5m1, cute hột me, nhiệt huyết và luôn cố gắng hoàn thành mọi thứ 1 cách tốt nhất", fact: "Có quá nhiều fact để fun" }
+            { name: "Bùi Thị Hồng Nhung", class: "K31TM1", description: "Cao 5m1, cute hột me, nhiệt huyết và luôn cố gắng hoàn thành mọi thứ 1 cách tốt nhất, học học nữa học mãi.", fact: "Có quá nhiều fact để fun" }
         ];
 
         let members = [...allMembers];
@@ -632,7 +510,6 @@
         const resultContainer = document.getElementById('resultContainer');
         const winnerName = document.getElementById('winnerName');
         const winnerInfo = document.getElementById('winnerInfo');
-        const historyList = document.getElementById('historyList');
         const remainingCount = document.getElementById('remainingCount');
 
         const colors = [
@@ -666,7 +543,8 @@
             ctx.rotate(currentRotation);
 
             for (let i = 0; i < members.length; i++) {
-                const startAngle = i * anglePerSegment;
+                // Start from top (-PI/2) so pointer points correctly
+                const startAngle = i * anglePerSegment - Math.PI / 2;
                 const endAngle = startAngle + anglePerSegment;
 
                 ctx.beginPath();
@@ -682,19 +560,23 @@
                 ctx.rotate(startAngle + anglePerSegment / 2);
                 ctx.textAlign = 'center';
                 ctx.fillStyle = '#fff';
-                ctx.font = `bold ${Math.max(10, canvas.width / 45)}px Arial`;
+                ctx.font = `bold ${Math.max(8, canvas.width / 50)}px Arial`;
                 ctx.shadowColor = 'rgba(0,0,0,0.5)';
                 ctx.shadowBlur = 3;
 
-                const name = members[i].name;
-                const words = name.split(' ');
+                // Show description instead of name
+                const description = members[i].description || 'Bí mật';
+                const words = description.split(' ');
                 const textRadius = radius * 0.65;
 
-                if (words.length > 2) {
-                    ctx.fillText(words.slice(0, -1).join(' '), textRadius, -5);
-                    ctx.fillText(words[words.length - 1], textRadius, 10);
-                } else {
-                    ctx.fillText(name, textRadius, 0);
+                // Show first 4-6 words of description
+                const maxWords = members.length > 15 ? 3 : 4;
+                const displayText = words.slice(0, maxWords).join(' ');
+                const secondLine = words.slice(maxWords, maxWords * 2).join(' ');
+
+                ctx.fillText(displayText, textRadius, secondLine ? -5 : 0);
+                if (secondLine && words.length > maxWords) {
+                    ctx.fillText(secondLine, textRadius, 10);
                 }
 
                 ctx.restore();
@@ -717,7 +599,11 @@
 
             const spins = 5 + Math.random() * 5;
             const randomIndex = Math.floor(Math.random() * members.length);
-            const targetAngle = (2 * Math.PI * spins) + (randomIndex * (2 * Math.PI / members.length));
+            const anglePerSegment = (2 * Math.PI) / members.length;
+            // Calculate target angle so pointer lands on middle of selected segment
+            // Pointer is at top, wheel rotates clockwise (negative direction makes it go right)
+            // To land on segment i, we need to rotate so that segment i is at top
+            const targetAngle = (2 * Math.PI * spins) - (randomIndex * anglePerSegment) - (anglePerSegment / 2);
 
             const startRotation = currentRotation;
             const startTime = Date.now();
@@ -759,24 +645,29 @@
             currentWinner = winner;
             revealState = 0;
 
-            // Initially show description
-            winnerName.textContent = '???';
+            // Show description first (same as wheel) - for consistency
+            winnerName.textContent = '❓ Đây là ai? ❓';
 
-            let infoHTML = `<strong>Lớp:</strong> ${winner.class}<br>`;
+            let infoHTML = '';
             if (winner.description) {
-                infoHTML += `<strong>Mô tả:</strong> ${winner.description}<br>`;
+                infoHTML = `<div style="font-size: 1.3em; line-height: 1.6; padding: 25px; background: #f8f9fa; border-radius: 15px; margin: 20px 0; border-left: 5px solid #667eea;">
+                    "${winner.description}"
+                </div>`;
+            } else {
+                infoHTML = `<div style="font-size: 1.1em; padding: 20px; background: #f8f9fa; border-radius: 15px; margin: 20px 0;">
+                    <p style="color: #999;">Không có mô tả!</p>
+                </div>`;
             }
-            infoHTML += `<p style="margin-top: 15px; color: #999; font-style: italic;">Click để xem thêm...</p>`;
+            infoHTML += `<p style="margin-top: 20px; color: #F4C430; font-weight: bold; font-size: 1.1em;">💡 Click để xem gợi ý thêm...</p>`;
 
             winnerInfo.innerHTML = infoHTML;
 
-            const historyItem = {
+            // Save to history (for export)
+            history.push({
                 name: winner.name,
                 class: winner.class,
                 time: new Date().toLocaleString('vi-VN')
-            };
-            history.push(historyItem);
-            updateHistory();
+            });
 
             setTimeout(() => {
                 resultContainer.classList.add('show');
@@ -788,34 +679,56 @@
 
             revealState = (revealState + 1) % 3;
 
-            let infoHTML = `<strong>Lớp:</strong> ${currentWinner.class}<br>`;
+            let infoHTML = '';
 
             if (revealState === 0) {
-                // Show description
-                winnerName.textContent = '???';
+                // Show description (same as initial - consistency with wheel)
+                winnerName.textContent = '❓ Đây là ai? ❓';
                 if (currentWinner.description) {
-                    infoHTML += `<strong>Mô tả:</strong> ${currentWinner.description}<br>`;
-                }
-                infoHTML += `<p style="margin-top: 15px; color: #999; font-style: italic;">Click để xem điều thú vị...</p>`;
-            } else if (revealState === 1) {
-                // Show fact
-                winnerName.textContent = '???';
-                if (currentWinner.fact) {
-                    infoHTML += `<strong>Điều thú vị:</strong> ${currentWinner.fact}<br>`;
+                    infoHTML = `<div style="font-size: 1.3em; line-height: 1.6; padding: 25px; background: #f8f9fa; border-radius: 15px; margin: 20px 0; border-left: 5px solid #667eea;">
+                        "${currentWinner.description}"
+                    </div>`;
                 } else {
-                    infoHTML += `<p style="color: #999;">Không có điều thú vị nào được chia sẻ.</p>`;
+                    infoHTML = `<div style="font-size: 1.1em; padding: 20px; background: #f8f9fa; border-radius: 15px; margin: 20px 0;">
+                        <p style="color: #999;">Không có mô tả!</p>
+                    </div>`;
                 }
-                infoHTML += `<p style="margin-top: 15px; color: #999; font-style: italic;">Click để xem tên...</p>`;
-            } else {
-                // Show name
-                winnerName.textContent = currentWinner.name;
-                if (currentWinner.description) {
-                    infoHTML += `<strong>Mô tả:</strong> ${currentWinner.description}<br>`;
-                }
+                infoHTML += `<p style="margin-top: 20px; color: #F4C430; font-weight: bold; font-size: 1.1em;">💡 Click để xem gợi ý thêm...</p>`;
+            } else if (revealState === 1) {
+                // Show fact as hint
+                winnerName.textContent = '🤔 Gợi ý thêm...';
                 if (currentWinner.fact) {
-                    infoHTML += `<strong>Điều thú vị:</strong> ${currentWinner.fact}<br>`;
+                    infoHTML = `<div style="font-size: 1.3em; line-height: 1.6; padding: 25px; background: #fff3cd; border-radius: 15px; margin: 20px 0; border-left: 5px solid #F4C430;">
+                        "${currentWinner.fact}"
+                    </div>`;
+                } else {
+                    infoHTML = `<div style="font-size: 1.1em; padding: 20px; background: #f8f9fa; border-radius: 15px; margin: 20px 0;">
+                        <p style="color: #999;">Không có gợi ý thêm!</p>
+                    </div>`;
                 }
-                infoHTML += `<p style="margin-top: 15px; color: #999; font-style: italic;">Click để xem lại từ đầu...</p>`;
+                infoHTML += `<p style="margin-top: 20px; color: #F4C430; font-weight: bold; font-size: 1.1em;">👤 Click để công bố tên...</p>`;
+            } else {
+                // Show name and all info
+                winnerName.textContent = currentWinner.name;
+                infoHTML = `<div style="background: #e8f5e9; padding: 15px; border-radius: 15px; margin: 15px 0;">
+                    <p style="color: #2e7d32; font-weight: bold; margin-bottom: 8px;">📍 Lớp: ${currentWinner.class}</p>
+                </div>`;
+
+                if (currentWinner.description) {
+                    infoHTML += `<div style="background: #f8f9fa; padding: 15px; border-radius: 15px; margin: 15px 0;">
+                        <p style="font-weight: bold; color: #667eea; margin-bottom: 8px;">📝 Mô tả:</p>
+                        <p style="line-height: 1.6;">${currentWinner.description}</p>
+                    </div>`;
+                }
+
+                if (currentWinner.fact) {
+                    infoHTML += `<div style="background: #fff3cd; padding: 15px; border-radius: 15px; margin: 15px 0;">
+                        <p style="font-weight: bold; color: #F4C430; margin-bottom: 8px;">✨ Điều thú vị:</p>
+                        <p style="line-height: 1.6;">${currentWinner.fact}</p>
+                    </div>`;
+                }
+
+                infoHTML += `<p style="margin-top: 20px; color: #999; font-style: italic; font-size: 0.9em;">Click để chơi lại từ đầu...</p>`;
             }
 
             winnerInfo.innerHTML = infoHTML;
@@ -827,19 +740,6 @@
             }, 100);
         }
 
-        function updateHistory() {
-            if (history.length === 0) {
-                historyList.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">Chưa có kết quả</p>';
-                return;
-            }
-
-            historyList.innerHTML = history.map((item, index) => `
-                <div class="history-item">
-                    <strong>#${history.length - index}. ${item.name}</strong>
-                    <small>${item.class} - ${item.time}</small>
-                </div>
-            `).reverse().join('');
-        }
 
         function createConfetti() {
             const container = document.getElementById('particleContainer');
@@ -926,6 +826,7 @@
         }
 
         spinButton.addEventListener('click', spin);
+        resultContainer.addEventListener('click', cycleWinnerInfo);
 
         updateCanvas();
         drawWheel();
